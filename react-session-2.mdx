@@ -1,0 +1,389 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import { github, vsDark } from "@code-surfer/themes";
+import image from "./random.jpg";
+
+export const theme = vsDark;
+
+# Namaskaram 🙏
+
+## _Getting the Foundation right for React_ ⚛️
+
+##### _Session 2_ on Objects, Functions, Scopes and Closures
+
+##### 22nd July , 2021
+
+---
+
+# Let's Begin 🎬
+
+---
+
+# Everything is Object in JS
+
+_Except:_ Primitives: (boolean, number and string), and undefined
+
+---
+
+#### did you know typeof null === "object" ?
+
+---
+
+# What is an Object?
+
+- An object is a collection of properties
+
+- Property is an association between a key and a value
+
+- Every object has a type
+
+- Just like real world objects
+
+---
+
+# 🌼 🏠 🚗 🔪 🎈 📱
+
+# 🪔 📷 🎞️ 🎥 🔎 📔
+
+# 💳 ✏️ 📅 🔒 ⛏️ 🧲
+
+---
+
+### Depending on the type...
+
+---
+
+# Properties can be categorized as
+
+- Just Plain Property 😄
+
+- Property with behaviour ( methods )
+
+---
+
+##### Property Key is IT, Property Value is WHAT
+
+---
+
+## An object of Type Car 🚗
+
+##### Properties: `Engine Capcity, Color, Size, Type, etc...`
+
+##### Behaviours: `turn, start, stop, accelerate, change gear, move, etc...`
+
+---
+
+### Sub Types
+
+# 🏎️ 🚗 🚓
+
+---
+
+<CodeSurfer>
+
+```js
+{
+  model: "Safari",
+  make: "Tata"
+  year: 2012,
+  color: "grey"
+  start: function() { //method
+      return "Wroom..."
+  }
+}
+```
+
+</CodeSurfer>
+
+---
+
+# Procedure
+
+A set of statements that performs a task or calculates a value
+
+---
+
+# Procedure to cook Dal Fry? 🥘
+
+- Take 200g of Toor dal
+
+- Soak in water
+
+- ask mom to make 😅
+
+---
+
+# Functions
+
+- are procedures
+
+- that take some input and return an output
+
+- there must be a 👫 between input <-> output
+
+---
+
+## makeDalFry(dal, quantity)
+
+- ✅ Yummy Dal Fry 😇
+
+- ❌ French Fries 😰
+
+---
+
+#### Type of inputs must be strict => TypeScript
+
+## makeDalFry(dal: Dal, quantity: number) :🥘
+
+---
+
+# Functions continued..
+
+- Basic building block in JS 🧱
+
+- Are also a type of Objects
+
+- First-class objects
+
+- Callable Objects
+
+---
+
+<CodeSurfer>
+
+```js
+{
+  model: "Safari",
+  make: "Tata"
+  year: 2012,
+  color: "grey"
+  start: function() {
+      return "Wroom..."
+  }
+}
+```
+
+```diff 6[3:19]
+
+```
+
+</CodeSurfer>
+
+---
+
+# Scopes
+
+- Scope means boundary
+
+- We need some way to tell what is a boundary
+
+---
+
+<CodeSurfer>
+
+```js
+{
+}
+```
+
+</CodeSurfer>
+
+---
+
+# Block Scope { }
+
+---
+
+<CodeSurfer>
+
+```js
+if (dalFryIsGood) {
+  const messageToTell = "It's delicious!";
+  console.log(messageToTell); // "It's delicious!"
+} else {
+  console.log("----silence-----");
+}
+
+console.log(messageToTell); // throws ReferenceError
+
+while (youFeelLikeEatingJunkFood) {
+  // think about side effects ( used in React too! )
+}
+```
+
+</CodeSurfer>
+
+---
+
+## Never use `var`. It's not block scoped
+
+## Also, think about hoisting
+
+---
+
+# Function Scope 🎬
+
+---
+
+<CodeSurfer>
+
+```js
+function walkInPark(duration) {
+  //till you feel like
+}
+```
+
+</CodeSurfer>
+
+---
+
+# Function Hoisting
+
+---
+
+<CodeSurfer>
+
+```js
+1;
+
+sayHello();
+function sayHello() {
+  console.log("Namaskaram!");
+}
+
+2;
+
+function sayHello() {
+  console.log("Namaskaram!");
+}
+sayHello();
+```
+
+</CodeSurfer>
+
+---
+
+### ❗ Function Declarations are hoisted ❗
+
+### ✅ Function Expressions are not hoisted
+
+---
+
+Expressions vs Declarations?
+
+---
+
+<CodeSurfer>
+
+```js
+sayHello(); // Error, sayHello is not defined
+const sayHello = function () {
+  console.log("Namaskaram!");
+};
+```
+
+</CodeSurfer>
+
+---
+
+### Back to scopes
+
+---
+
+# Global scope 🌎
+
+- top in browser
+
+- Go to Chrome Dev tools and see them
+
+---
+
+#### Lexical Scope, Nested Scope and Closures
+
+---
+
+### Closures
+
+Whenever you create a function within another function, you have created a closure.
+
+---
+
+<CodeSurfer>
+
+```js
+function outerFunction() {
+  const outer = `I see the outer variable!`;
+
+  function innerFunction() {
+    console.log(outer);
+  }
+
+  return innerFunction;
+}
+
+outerFunction()();
+```
+
+</CodeSurfer>
+
+---
+
+# Shorter Version
+
+---
+
+<CodeSurfer>
+
+```js
+function outerFunction() {
+  const privateVariable = `I see the outer private variable!`;
+
+  return function innerFunction() {
+    console.log(privateVariable);
+  };
+}
+
+outerFunction()(); // I see the outer variable!
+```
+
+</CodeSurfer>
+
+---
+
+### Closures have access to the variables in the outer function
+
+- Are used to :
+
+  - To control side effects
+
+  - To create private variables
+
+---
+
+## Controlling side effects with closures
+
+- Something aside from returning a value from a function
+
+- Like :
+
+  - `console.log()`
+
+  - ajax requests
+
+---
+
+<CodeSurfer>
+
+```js
+function (x) {
+  console.log('Thank you ( is a side effect 😅 ) ')
+}
+
+```
+
+</CodeSurfer>
+
+---

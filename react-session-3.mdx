@@ -1,0 +1,481 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import {
+  github,
+  vsDark,
+  vsLight,
+} from "@code-surfer/themes";
+import syncAsyncImage from "./images/syncAsync.png";
+import threadImage from "./images/thread.png";
+
+export const theme = vsLight;
+
+# Namaskaram 🙏
+
+## _Getting the Foundation right for React_ ⚛️
+
+##### _Session 3_ on Async Javascript
+
+##### 27th July , 2021
+
+---
+
+# Let's Begin 🎬
+
+---
+
+### JavaScript is Synchronous, Blocking and Single Threaded 😮
+
+---
+
+### What?
+
+- It's the APIs that browsers provide that make it
+
+---
+
+### Asynchronous, Non-Blocking and still Single Threaded 🧵
+
+---
+
+### Programs, Processes and Threads 🙄
+
+---
+
+### Programs, Processes and Threads 🙃
+
+- Program is a set of instructions
+- Process is a program in execution (in memory, ready to be processed)
+- Threads are contained inside a process
+- (threads share the same resources, processes do not)
+
+---
+
+### Threads ( software )
+
+A process with two threads of execution, running on one processor
+
+<Image
+  src={threadImage}
+  style={{
+    width: "200px",
+    height: "200px",
+    marginTop: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+/>
+
+###### Image Source: https://en.wikipedia.org/wiki/Thread_(computing)
+
+---
+
+##### Machine may support multiple threads ✅
+
+##### OS may support multiple threads ✅
+
+##### But the language must also support it, and a programmer must use it ⚠️
+
+---
+
+### `window.alert` Blocks your main thread 📟
+
+---
+
+### Thread 🧵
+
+- Programs 'use' threads ( provided by language )
+
+- JavaScript is single threaded
+
+- It can still use worker threads
+
+---
+
+# Synchronous vs Asynchronous
+
+- ###### Synchronous by definition means occurring at the _same time_.
+
+- ###### Asynchronous by definition means _not_ occurring at the _same time_.
+
+But...
+
+---
+
+## Synchronous vs Asynchronous in 🖥️
+
+- ###### Synchronous in programming means occurring in _sequence_
+
+- ###### Asynchronous in programming mean means _not_ occurring in _sequence_.
+
+---
+
+### Synchronous vs Asynchronous continued...
+
+<Image
+  src={syncAsyncImage}
+  style={{
+    width: "50%",
+    height: "30%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+/>
+
+---
+
+# Blocking vs Non Blocking
+
+- ###### Suppose you are driving 🏎️
+
+- ###### And you encounter a toll gate 🚏
+
+---
+
+# Blocking 🛑
+
+- ###### Now , you are going to 'block' the toll gate ( main thread ) for a while depending
+
+  - ###### on various factors like: FastTag, cash change, etc.
+
+- ###### Blocking is always in contrast to others who also want to go through the same gate.
+
+---
+
+# Solutions?
+
+- ###### You could have multiple gates ( cores in a processor ), but similar problems still exit.
+
+- ###### You could get a 'promise' from the car owner that 'I will get back to you'
+
+- ###### Now, a single toll gate will not stop anybody from moving,
+  - ###### but will act as a checkpoint to collect a written promise.
+
+---
+
+# Promise
+
+- He _has_ promised me to marry 💑
+
+  - He did marry 👫 -----> Fulfilled
+
+  - He later tells that he doesn't want to marry 🙍 ------> Rejected
+
+  - He doesn't inform anything 😠 -------> Rejected (after a timeout)
+
+  - Till any of the above occur -------> Pending
+
+  - Fulfilled or Rejected => Settled
+
+---
+
+# Promise
+
+- He (task) _has_ promised me (JavaScript) to marry 💑
+
+---
+
+#### This is the basis of _Non Blocking Asynchronous_ Code
+
+- ###### Non Blocking since I am not blocking ( majorly ) others from 'moving'.
+
+- ###### Asynchronous ( from main thread perspective ) since depending
+  ###### on a person the promise may take different times (which could be sync/async) to
+  - Be in 'Pending'
+  - After which it will either
+    - Fulfill
+    - Reject
+
+---
+
+#### Promises are similar to call backs, but
+
+- ###### they allow us to chain multiple async operations together using `.then()`
+
+- ###### helps us avoid the messy 'pyramid of doom' or the call back hell
+
+- ###### and many others
+
+---
+
+#### You already are familiar with async code:
+
+---
+
+<CodeSurfer>
+
+```js
+console.log("registering click handler");
+
+button.addEventListener("click", () => {
+  console.log("get click");
+});
+
+console.log("all done");
+```
+
+</CodeSurfer>
+
+---
+
+# Async Function example
+
+---
+
+<CodeSurfer>
+
+```js
+async function hello() {
+  const h1 = new Promise((resolve) =>
+    setTimeout(() => resolve("1"), 1000)
+  );
+  const h2 = new Promise(
+    (_, reject) => setTimeout(() => reject("2"), 500) //note the timeout
+  );
+  const results = [await h1, await h2]; // ❌
+  // Use Promise.all or Promise.allSettled instead.
+}
+hello().catch((e) => {
+  console.error("Error occurred!", e);
+});
+```
+
+</CodeSurfer>
+
+---
+
+# Promises: Executor and Consumer
+
+- Executor => `(resolve, reject) => {}`
+
+- Consumer: `.then, .catch and .finally`
+
+---
+
+### Promises: There can be only a single result or an error
+
+---
+
+<CodeSurfer>
+
+```js
+let promise = new Promise(function (resolve, reject) {
+  resolve("done");
+
+  reject(new Error("…")); // ignored
+  setTimeout(() => resolve("…")); // ignored
+});
+```
+
+</CodeSurfer>
+
+---
+
+# Promise: Classic Error
+
+---
+
+<CodeSurfer>
+
+```js
+let promise = new Promise(function (resolve, reject) {
+  setTimeout(() => resolve(1), 1000);
+});
+
+promise.then(function (result) {
+  alert(result); // 1
+  return result * 2;
+});
+
+promise.then(function (result) {
+  alert(result); // 1
+  return result * 2;
+});
+
+promise.then(function (result) {
+  alert(result); // 1
+  return result * 2;
+});
+```
+
+</CodeSurfer>
+
+---
+
+### Chaining is used much more often.
+
+---
+
+# Microtasks and Microtask Queue
+
+---
+
+<CodeSurfer>
+
+```js
+let promise = Promise.resolve();
+
+promise.then(() => alert("promise done!"));
+
+alert("code finished"); // this alert shows first
+```
+
+</CodeSurfer>
+
+---
+
+### Execution of a task is initiated only when nothing else is running.
+
+---
+
+# Async/await
+
+- Special syntax to work with promises
+
+---
+
+# Async function
+
+- A function that always returns a promise
+
+---
+
+<CodeSurfer>
+
+```js
+async function f() {
+  return 1;
+}
+
+f().then(alert); // 1
+```
+
+</CodeSurfer>
+
+---
+
+# Is same as
+
+---
+
+<CodeSurfer>
+
+```js
+async function f() {
+  return Promise.resolve(1);
+}
+
+f().then(alert); // 1
+```
+
+</CodeSurfer>
+
+---
+
+# Await
+
+- Works only inside async functions
+
+---
+
+<CodeSurfer>
+
+```js
+// works only inside async functions
+let value = await promise;
+```
+
+</CodeSurfer>
+
+---
+
+# Example
+
+---
+
+<CodeSurfer>
+
+```js
+async function f() {
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve("done!"), 1000);
+  });
+
+  let result = await promise; // wait until the promise resolves (*)
+
+  alert(result); // "done!"
+}
+
+f();
+```
+
+</CodeSurfer>
+
+---
+
+## Common must knows
+
+- Can’t use `await` in regular functions
+
+- `await` won’t work in the top-level code
+
+- You will have to wrap it in a IIFE
+
+## Error Handling
+
+---
+
+<CodeSurfer>
+
+```js
+async function f() {
+  await Promise.reject(new Error("Aiyo!"));
+}
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+async function f() {
+  throw new Error("Aiyo!");
+}
+```
+
+</CodeSurfer>
+
+---
+
+### Which means we can use `try/catch`
+
+---
+
+<CodeSurfer>
+
+```js
+async function f() {
+  try {
+    let response = await fetch("http://random-url");
+  } catch (err) {
+    alert(err); // TypeError: failed to fetch
+  }
+}
+
+f();
+```
+
+</CodeSurfer>
+
+---
+
+## Thanks! 🙏🏽
+
+### Let's `await` till the next session
