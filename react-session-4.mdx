@@ -1,0 +1,702 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import {
+  github,
+  vsDark,
+  vsLight,
+} from "@code-surfer/themes";
+import libraryImage from "./images/session-4/library.jpg";
+import frameImage from "./images/session-4/frame.jpg";
+import controlFlowImage from "./images/session-4/framework-library-controlflow.jpg";
+
+export const theme = vsLight;
+
+export const Container = ({ children }) => (
+  <div>{children}</div>
+);
+
+export const OrderedList = ({ children }) => (
+  <ol>{children}</ol>
+);
+
+export const UnOrderedList = ({ children }) => (
+  <ul style={{ listStyleType: "square" }}>{children}</ul>
+);
+
+export const Heading = ({
+  styleProps = { color: "#454545", size: "68px" },
+  content,
+}) => (
+  <h1
+    style={{
+      color: styleProps.color,
+      fontSize: styleProps.size,
+      marginTop: "rem",
+      marginBottom: "4rem",
+      fontWeight: "500",
+      borderLeft: "16px solid #61dafb",
+      paddingLeft: "22px",
+      paddingTop: "16px",
+      paddingBottom: "16px",
+    }}
+  >
+    {content}
+  </h1>
+);
+
+export const CustomHeading = ({ children, ...rest }) => (
+  <Heading {...rest} content={children} />
+);
+
+export const ListItem = ({
+  styleProps = { color: "#4f4e4e", size: "2.5rem" },
+  content,
+}) => (
+  <li
+    style={{
+      color: styleProps.color,
+      fontSize: styleProps.size,
+      marginTop: "1rem",
+      fontWeight: "300",
+    }}
+  >
+    {content}
+  </li>
+);
+
+export const CustomListItem = ({ children, ...props }) => (
+  <ListItem {...props} content={children} />
+);
+
+export const Footer = ({ component }) => (
+  <div
+    style={{
+      background: "#61dafb",
+      position: "absolute",
+      bottom: "0",
+      left: "0",
+      right: "0",
+      padding: "12px",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {component}
+    </div>
+  </div>
+);
+
+# Namaskaram 🙏
+
+## _Getting the Foundation right for React_ ⚛️
+
+### _Session 4_ on _React Basics_
+
+##### 29th July , 2021
+
+---
+
+# Let's Begin 🥥
+
+---
+
+<Container>
+  <Heading content="What is React? ⚛️" />
+  <p style={{ fontSize: "32px" }}>Docs say:</p>
+
+  <em style={{fontWeight: "400"}}>
+    "React is a JavaScript <strong>library</strong>  for building user
+    interfaces"
+  </em>
+</Container>
+
+---
+
+### Before going any further... 🏴󠁣󠁭󠁥󠁮󠁿
+
+---
+
+<Container>
+  <Heading content="Framework vs Library?" />
+  <UnOrderedList>
+    <ListItem content="Both are casually used interchangeably" />
+    <ListItem content="But, there is a difference!" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<Container>
+  <Heading content="Both are just code 💻" />
+  <UnOrderedList>
+    <ListItem content="Written by somebody" />
+    <ListItem content="Used to solve common problems" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<p style={{ fontSize: "2rem", fontWeight: "700" }}>Frame</p>
+
+<img
+  src={frameImage}
+  style={{
+    width: "300px",
+    height: "400px",
+    marginTop: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+/>
+
+<Footer
+  component={
+    <span style={{ fontSize: "16px" }}>
+      Image credit:{"   "}
+      <a
+        target="_blank"
+        href="https://www.ikea.com/in/en/p/ribba-frame-black-40378458/"
+      >
+        ikea
+      </a>
+    </span>
+  }
+/>
+
+---
+
+<p style={{ fontSize: "2rem", fontWeight: "700" }}>
+  Library
+</p>
+
+<img
+  src={libraryImage}
+  style={{
+    width: "400px",
+    height: "600px",
+    marginTop: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+/>
+
+<Footer
+  component={
+    <span style={{ fontSize: "16px" }}>
+      Image credit:{"   "}
+      <a target="_blank" href="https://unsplash.com">
+        unsplash
+      </a>
+    </span>
+  }
+/>
+
+---
+
+<Container>
+  <Heading content="Library" />
+  <UnOrderedList>
+    <ListItem content="Using a library is like building your own home." />
+    <ListItem content="You are in charge of how it comes up, what goes in, etc." />
+    <ListItem content="Since you cannot do it all, you hire specialists ( libraries )" />
+    <ListItem content="You are in full control" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<Container>
+  <Heading content="Framework" />
+  <UnOrderedList>
+    <ListItem content="Is like buying a model home / apartment" />
+    <CustomListItem>
+      There is a blueprint and a few{" "}
+      <em>
+        <strong>limited</strong>
+      </em>{" "}
+      choices in terms of architecture and design
+    </CustomListItem>
+    <ListItem content="The builder is in major control" />
+    <ListItem content="You can only select curtains, furniture, etc" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<Container>
+  <Heading content="Main difference" />
+  <UnOrderedList>
+    <ListItem content="Inversion of Control" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<img
+  src={controlFlowImage}
+  style={{
+    width: "700px",
+    height: "400px",
+    marginTop: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+/>
+
+---
+
+### Let's get into the subject
+
+---
+
+### JSX
+
+---
+
+<CodeSurfer>
+
+```js
+const element = <h1>Hello, world!</h1>;
+```
+
+</CodeSurfer>
+
+---
+
+### That was neither a string not HTML
+
+---
+
+### You can use JS in JSX
+
+---
+
+<CustomHeading>Did you know?</CustomHeading>
+<CodeSurfer>
+
+```js
+<div /> // Invalid ❌ HTML but Valid ✅ JSX
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Babel compiles JSX down to React.createElement() calls " />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+const element = <h1 className="greeting">Hello, world!</h1>;
+```
+
+</CodeSurfer>
+
+---
+
+### Is same as
+
+---
+
+<CodeSurfer>
+
+```js
+const element = React.createElement(
+  "h1",
+  { className: "greeting" },
+  "Hello, world!"
+);
+```
+
+</CodeSurfer>
+
+---
+
+### Essentially creating...
+
+---
+
+<CodeSurfer>
+
+```js
+const element = {
+  type: "h1",
+  props: {
+    className: "greeting",
+    children: "Hello, world!",
+  },
+};
+```
+
+</CodeSurfer>
+
+---
+
+### Which are called React Elements
+
+<p style={{ fontSize: "2rem" }}>
+  React reads these objects and uses them to construct the
+  <strong>DOM</strong> and keep it up to date.
+</p>
+
+---
+
+### React Element -> React DOM -> Actual DOM
+
+---
+
+### React Elements are immutable
+
+<p style={{ fontSize: "2rem" }}>
+  The only way to update the UI is to create a new element
+</p>
+
+---
+
+### React Only Updates What’s Necessary
+
+<span style={{ fontSize: "2rem" }}>
+  React DOM compares the element and its children to the
+  previous one
+</span>
+<span style={{ fontSize: "2rem" }}>
+  and only applies the DOM updates necessary to bring the
+  DOM to the desired state.
+</span>
+
+---
+
+<Container>
+  <Heading content="Components" />
+  <UnOrderedList>
+    <ListItem content="Are like JavaScript functions" />
+    <ListItem content="Input -> Props" />
+    <ListItem content="Output -> React Elements" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<Container>
+  <Heading content="Components make resuability possible" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Function vs Class Components" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="We are only concerned with Function components" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Props are read-only" />
+  <ListItem content="It must never modify its own props ❌" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="In essence, we are looking at pure functions" />
+  <ListItem content="Functions which return the same result for a given input" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="State 🌫️" />
+  <ListItem content="I was 4 feet 3 years ago" />
+  <ListItem content="I am 6 feet now" />
+  <ListItem content="In essence, state determines 'how is it' now" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Mounting and Unmounting" />
+  <ListItem content="Simply means adding or removing DOM elements" />
+  <ListItem content="Primarily to free up resources" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Mounting ➕" />
+  <ListItem content="When an element is being rendered to the DOM for the first time" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Unmounting ➖" />
+  <ListItem content="When an element is being removed from the DOM" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Lifecycle methods 🔄" />
+  <ListItem content="Special methods which React provides when a component mounts/unmounts" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Unidirectional Data Flow ⬇️" />
+  <ListItem content="Any state is always owned by some specific component" />
+  <ListItem content="Any data or UI derived from a state can only affect components “below” them in the tree." />
+  <ListItem content="Like a waterfall of props."/>
+  <ListItem content="The waterfall may be joined by many other streams, but they all flow down" />
+
+</Container>
+
+---
+
+<Container>
+  <Heading content="Creating a component inside a component ?" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+const App = () => {
+  const [search, setSearch] = useState("");
+
+  const Users = () => <UserList pattern={search} />;
+
+  return (
+    <div id="app" className="home-page">
+      <Header />
+      <WelcomeSlogan />
+      <Users />
+    </div>
+  );
+};
+```
+
+</CodeSurfer>
+
+---
+
+### Fix?
+
+---
+
+<CodeSurfer>
+
+```js
+return (
+  <div id="app" className="home-page">
+    <Header />
+    <WelcomeSlogan />
+    <UserList pattern={search} />
+  </div>
+);
+```
+
+</CodeSurfer>
+
+---
+
+### A nice mental model to keep in mind
+
+---
+
+<Container>
+  <Heading content="React is a declarative library." />
+  <ListItem content="Means instead of describing what you need to change to get to the next state" />
+  <ListItem content="You just describe how you want your DOM to look like" />
+</Container>
+
+---
+
+### Imperative way would be:
+
+---
+
+<CodeSurfer>
+
+```js
+button.addEventListener("click", () => {
+  toggleState = !toggleState;
+  toggle.innerText = `toggle is ${toggleState}`;
+  // notice that we have to manually update the DOM
+});
+```
+
+</CodeSurfer>
+
+---
+
+<p style={{ fontSize: "2rem" }}>
+  Every time you change the toggle value, you{" "}
+  <strong>have to</strong> remember to update the DOM as
+  well 😑{" "}
+</p>
+
+---
+
+### Declarative way:
+
+---
+
+<CodeSurfer>
+
+```js
+const [toggle, setToggle] = useState(false);
+return (
+  <button onClick={() => setToggle(!toggle)}>
+    toggle is {toggle.toString()}
+  </button>
+);
+// notice how we don't explicitly mention how to update the DOM
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading
+    styleProps={{ size: "2.5rem" }}
+    content="Your view should be expressed as a pure function of your application state."
+  />
+  <p style={{ fontSize: "2rem", color: "grey" }}>
+    view = <code>f(application_state)</code>
+  </p>
+  <p style={{ fontSize: "2.2rem" }}>
+    <em>
+      In other words, your data goes through a function
+      (pure) and your view comes out the other end
+    </em>
+  </p>
+</Container>
+
+---
+
+<Container>
+  <Heading
+    styleProps={{ size: "2.5rem" }}
+    content="From our example"
+  />
+  <p style={{ fontSize: "2rem", color: "grey" }}>
+    <code>button = f(isToggled)</code>
+  </p>
+  <p style={{ fontSize: "2.2rem" }}>
+    <code>isToggled</code> was consumed by the component,
+    and a button ( view ) came out of it.
+  </p>
+</Container>
+
+---
+
+<Container>
+  <CustomHeading styleProps={{ size: "2rem" }}>
+    Say whenever <code>isToggled</code> is true we want the
+    button to be{" "}
+    <span style={{ color: "green" }}>green</span>,
+    otherwise, it should be{" "}
+    <span style={{ color: "red" }}>red</span>
+  </CustomHeading>
+  <p style={{ fontSize: "2rem", color: "grey" }}>
+    <code>button = f(isToggled, color) ❌</code>
+  </p>
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+const [isToggled, setIsToggled] = useState(false);
+const [color, setColor] = useState("green");
+
+function handleClick() {
+  setIsToggled(!toggle);
+  setColor(toggle ? "green" : "red"); //❌
+}
+
+return (
+  <button style={{ color }} onClick={handleClick}>
+    toggle is {isToggled.toString()}
+  </button>
+);
+```
+
+</CodeSurfer>
+
+---
+
+### Fix?
+
+---
+
+<Container>
+  <CustomHeading styleProps={{ size: "2rem" }}>
+    Color is a derived state
+  </CustomHeading>
+  <p style={{ fontSize: "2rem", color: "grey" }}>
+    <code>button = f(isToggled, color) ❌</code>
+  </p>
+  <p style={{ fontSize: "2rem", color: "grey" }}>
+    <code>color = f(isToggled) ✅</code>
+  </p>
+  <p style={{ fontSize: "2rem", color: "grey" }}>
+    <code>button = f(isToggled) ✅</code>
+  </p>
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+const [isToggled, setIsToggled] = useState(false);
+const [color, setColor] = useState("green");
+
+useEffect(() => {
+  if (isToggled) setColor("green");
+  else setColor("red");
+}, [isToggled]);
+
+function handleClick() {
+  setIsToggled(!toggle);
+}
+
+return (
+  <button style={{ color }} onClick={handleClick}>
+    toggle is {isToggled.toString()}
+  </button>
+);
+```
+
+</CodeSurfer>
+
+---
+
+## That's it for today, thanks! 🙏🏽
+
+##### Let us try to persist these learnings to a permanent 'state' 😄

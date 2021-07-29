@@ -2,8 +2,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "start": "mdx-deck react-session-3.mdx",
-    "build": "mdx-deck build react-session-3.mdx",
+    "start": "mdx-deck react-session-4.mdx",
+    "build": "mdx-deck build react-session-4.mdx",
     "test": "echo \"there are no tests\""
   },
   "devDependencies": {
