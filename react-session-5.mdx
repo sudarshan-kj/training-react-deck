@@ -1,0 +1,862 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import {
+  github,
+  vsDark,
+  vsLight,
+} from "@code-surfer/themes";
+import libraryImage from "./images/session-4/library.jpg";
+import frameImage from "./images/session-4/frame.jpg";
+import controlFlowImage from "./images/session-4/framework-library-controlflow.jpg";
+
+export const theme = vsLight;
+
+export const Container = ({ children }) => (
+  <div>{children}</div>
+);
+
+export const FixedContainer = ({ children }) => (
+  <div style={{ width: "1300px" }}>{children}</div>
+);
+
+export const OrderedList = ({ children }) => (
+  <ol>{children}</ol>
+);
+
+export const UnOrderedList = ({ children }) => (
+  <ul style={{ listStyleType: "square" }}>{children}</ul>
+);
+
+export const Heading = ({
+  styleProps = { color: "#454545", size: "68px" },
+  content,
+}) => (
+  <h1
+    style={{
+      color: styleProps.color,
+      fontSize: styleProps.size,
+      marginTop: "rem",
+      marginBottom: "4rem",
+      fontWeight: "500",
+      borderLeft: "16px solid #61dafb",
+      paddingLeft: "22px",
+      paddingTop: "16px",
+      paddingBottom: "16px",
+    }}
+  >
+    {content}
+  </h1>
+);
+
+export const CustomHeading = ({ children, ...rest }) => (
+  <Heading {...rest} content={children} />
+);
+
+export const ListItem = ({
+  styleProps = { color: "#4f4e4e", size: "2.5rem" },
+  content,
+}) => (
+  <li
+    style={{
+      color: styleProps.color,
+      fontSize: styleProps.size,
+      marginTop: "1rem",
+      fontWeight: "300",
+    }}
+  >
+    {content}
+  </li>
+);
+
+export const CustomListItem = ({ children, ...props }) => (
+  <ListItem {...props} content={children} />
+);
+
+export const Footer = ({ component }) => (
+  <div
+    style={{
+      background: "#61dafb",
+      position: "absolute",
+      bottom: "0",
+      left: "0",
+      right: "0",
+      padding: "12px",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {component}
+    </div>
+  </div>
+);
+
+# Namaskaram 🙏
+
+## _Getting the Foundation right for React_ ⚛️
+
+### _Session 5_ on _Design Patterns and common features in React_
+
+##### 3rd August , 2021
+
+---
+
+# Let's Begin 🥥
+
+---
+
+<Container>
+  <Heading content="Table Of Contents ⚛️" />
+  <OrderedList>
+    <ListItem content="React Context" />
+    <ListItem content="Higher Order Components" />
+    <ListItem content="Gotchas in JSX" />
+    <ListItem content="Render Props" />
+    <ListItem content="Refs and forwardRefs" />
+  </OrderedList>
+</Container>
+
+---
+
+<Container>
+  <Heading content="React Context" />
+  <ListItem content="A way to pass data through the component tree " />
+  <ListItem
+    content="Without
+    having to pass props down manually at every level"
+  />
+  <CustomListItem>
+    Avoid <em>prop drilling</em>
+  </CustomListItem>
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+function App {
+  return <Toolbar theme="dark" />;
+}
+
+function Toolbar(props) {
+  return (
+    <div>
+      <ThemedButton theme={props.theme} />
+    </div>
+  );
+}
+
+function ThemedButton {
+  return <Button theme={this.props.theme} />;
+}
+
+```
+
+</CodeSurfer>
+
+---
+
+### Using React Context... 🏴󠁣󠁭󠁥󠁮󠁿
+
+---
+
+<CodeSurfer>
+
+```js
+export const ThemeContext = React.createContext('light');
+
+function App {
+    return (
+      <ThemeContext.Provider value="dark">
+        <Toolbar />
+      </ThemeContext.Provider>
+    );
+}
+
+function Toolbar() {
+  return (
+    <div>
+      <ThemedButton />
+    </div>
+  );
+}
+
+function ThemedButton {
+  const themeValue = useContext(ThemeContext);
+  return <Button theme={themeValue} />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+### Dont overuse React Context
+
+You could instead use React Composition
+
+---
+
+<CodeSurfer>
+
+```js
+function Page(props) {
+  const user = props.user;
+  const content = <Feed user={user} />;
+  const topBar = (
+    <NavigationBar>
+      <Link href={user.link}>
+        <Avatar user={user} size={props.avatarSize} />
+      </Link>
+    </NavigationBar>
+  );
+  return <PageLayout topBar={topBar} content={content} />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Higher Order Components" />
+  <p style={{ fontSize: "32px" }}>
+    HOC's come from Higher Order Functions
+  </p>
+</Container>
+
+---
+
+### Let's look at an example 💡
+
+---
+
+<CodeSurfer>
+
+```js
+function CommentList(props) {
+  const [comments, setComments] = useState(
+    DataSource.getComments()
+  );
+
+  function handleChange(e) {
+    setComments(DataSource.getComments());
+  }
+
+  useEffect(() => {
+    DataSource.addChangeListener(handleChange);
+    return () =>
+      DataSource.removeChangeListener(handleChange);
+  }, []);
+
+  return (
+    <div>
+      {comments.map((comment) => (
+        <Comment comment={comment} key={comment.id} />
+      ))}
+    </div>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+function BlogPost(props) {
+  const [blogPost, setBlogPost] = useState(
+    DataSource.getBlogPost(props.id)
+  );
+
+  function handleChange(e) {
+    setBlogPost(DataSource.getBlogPost(props.id));
+  }
+
+  useEffect(() => {
+    DataSource.addChangeListener(handleChange);
+    return () =>
+      DataSource.removeChangeListener(handleChange);
+  }, []);
+
+  return <TextBlock text={this.state.blogPost} />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+### They both are not identical
+
+<Container>
+  <UnOrderedList>
+    <ListItem content="They call different methods on Data source " />
+    <ListItem content="They render different output" />
+  </UnOrderedList>
+</Container>
+
+---
+
+### But much of their implementation is the same
+
+<Container>
+  <UnOrderedList>
+    <ListItem content="On mount, add a change listener to DataSource." />
+    <ListItem content="Inside the listener, call setState whenever the data source changes" />
+    <ListItem content="On unmount, remove the change listener" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<Container>What do we want?</Container>
+
+---
+
+<Container>Abstraction! 🤷‍♂️</Container>
+
+---
+
+<FixedContainer>
+  We can write a function that creates components like{" "}
+  <strong>CommentList</strong> and <strong>BlogPost</strong>
+  , that subscribe to DataSource
+</FixedContainer>
+
+---
+
+### Something like this
+
+---
+
+<CodeSurfer>
+
+```js
+const CommentListWithSubscription = withSubscription(
+  CommentList,
+  (DataSource) => DataSource.getComments()
+);
+
+const BlogPostWithSubscription = withSubscription(
+  BlogPost,
+  (DataSource, props) => DataSource.getBlogPost(props.id)
+);
+```
+
+</CodeSurfer>
+
+---
+
+### And our HOC looks like
+
+---
+
+<CodeSurfer>
+
+```js
+function withSubscription(WrappedComponent, selectData) {
+  // you cannot use any react hooks here since this is not a component!
+  return function (props) {
+    const [data, setData] = useState(
+      selectData(DataSource, props)
+    );
+
+    function handleChange(e) {
+      setData(selectData(DataSource, props));
+    }
+
+    useEffect(() => {
+      DataSource.addChangeListener(handleChange);
+      return () =>
+        DataSource.removeChangeListener(handleChange);
+    }, []);
+
+    //Notice how we pass props to the original component!
+    return <WrappedComponent data={data} {...props} />;
+  };
+}
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <CustomHeading>Gotchas in JSX</CustomHeading>
+  <ListItem content="Using Dot Notation for JSX Type" />
+  <ListItem content="User-Defined Components Must Be Capitalized" />
+  <ListItem content="Choosing the Type at Runtime" />
+</Container>
+
+---
+
+### Using Dot Notation for JSX Type
+
+---
+
+<CodeSurfer>
+
+```js
+//Don't need this import anymore
+import React from "react";
+
+const MyComponents = {
+  DatePicker: function DatePicker(props) {
+    return (
+      <div>Imagine a {props.color} datepicker here.</div>
+    );
+  },
+};
+
+function BlueDatePicker() {
+  return <MyComponents.DatePicker color="blue" />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+### User-Defined Components Must Be Capitalized
+
+---
+
+<CodeSurfer>
+
+```js
+//Don't need this import anymore
+import React from "react";
+
+// ❌
+function hello(props) {
+  // ✅
+  return <div>Hello {props.toWhat}</div>;
+}
+
+function HelloWorld() {
+  // ❌ React thinks <hello /> is an HTML tag
+  return <hello toWhat="World" />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+//Don't need this import anymore
+import React from "react";
+
+// ✅
+function Hello(props) {
+  // ✅ Because div is a valid HTML tag:
+  return <div>Hello {props.toWhat}</div>;
+}
+
+function HelloWorld() {
+  // ✅
+  return <Hello toWhat="World" />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+### Choosing the Type at Runtime
+
+---
+
+<CodeSurfer>
+
+```js
+import { PhotoStory, VideoStory } from './stories';
+
+const components = {
+  photo: PhotoStory,
+  video: VideoStory
+};
+
+function Story(props) {
+  // ❌ JSX type can't be an expression.
+  return <components[props.storyType] story={props.story} />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+import { PhotoStory, VideoStory } from "./stories";
+
+const components = {
+  photo: PhotoStory,
+  video: VideoStory,
+};
+
+function Story(props) {
+  // ✅ JSX type can be a capitalized variable.
+  const SpecificStory = components[props.storyType];
+  return <SpecificStory story={props.story} />;
+}
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Children in JSX" />
+</Container>
+
+---
+
+<FixedContainer>
+  {" "}
+  JSX expressions that contain both an opening tag and a closing
+  tag, the content between those tags is passed as a special
+  prop: <strong>props.children</strong>{" "}
+</FixedContainer>
+
+---
+
+<CodeSurfer>
+
+```js
+<MyContainer>
+  <MyFirstComponent />
+  <MySecondComponent />
+</MyContainer>
+```
+
+</CodeSurfer>
+
+---
+
+### Functions as Children
+
+You could have a component take a `callback` as props.children
+
+---
+
+<CodeSurfer>
+
+```js
+function Repeat(props) {
+  let items = [];
+  for (let i = 0; i < props.numTimes; i++) {
+    items.push(props.children(i));
+  }
+  return <div>{items}</div>;
+}
+
+function ListOfTenThings() {
+  return (
+    <Repeat numTimes={10}>
+      {(index) => (
+        <div key={index}>
+          This is item {index} in the list
+        </div>
+      )}
+    </Repeat>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+##### This works because a React component can also return an array of elements:
+
+---
+
+<CodeSurfer>
+
+```js
+return [
+  <li key="A">First item</li>,
+  <li key="B">Second item</li>,
+  <li key="C">Third item</li>,
+];
+```
+
+</CodeSurfer>
+
+---
+
+### Booleans, Null, and Undefined Are Ignored
+
+They simple don't render. Tags do, just the content will not be
+
+---
+
+<CodeSurfer>
+
+```js
+<div />
+
+<div></div>
+
+<div>{false}</div>
+
+<div>{null}</div>
+
+<div>{undefined}</div>
+
+<div>{true}</div>
+```
+
+</CodeSurfer>
+
+---
+
+### If you want them rendered
+
+Convert it to a `string` first
+
+---
+
+<CodeSurfer>
+
+```js
+<div>Variable is {String(myVariable)}</div>
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Render Props" />
+  <ListItem content="A technique for sharing code between React components using a prop whose value is a function" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+function BaseComponent(props) {
+  const [heading, setHeading] = useState("Hello!");
+  return <>{props.render(heading)}</>;
+}
+
+<BaseComponent render={(heading) => <h1>{heading}</h1>} />;
+```
+
+</CodeSurfer>
+
+---
+
+### Or use the more often used `children` prop
+
+---
+
+<CodeSurfer>
+
+```js
+function BaseComponent(props) {
+  const [heading, setHeading] = useState("Hello!");
+  return <>{props.children(heading)}</>;
+}
+
+<BaseComponent>
+  {(heading) => <h1>{heading}</h1>}
+</BaseComponent>;
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Refs and forwardRefs" />
+</Container>
+
+---
+
+### Refs
+
+<ListItem content="Refs provide a way to access DOM nodes or React elements created in the render() method" />
+
+---
+
+### A ref is a plain JS object 😅
+
+---
+
+<CodeSurfer>
+
+```js
+{ current: <some value> }
+```
+
+</CodeSurfer>
+
+<Footer
+  component={
+    <span style={{ fontSize: "16px" }}>
+      <a
+        target="_blank"
+        href="https://github.com/facebook/react/blob/b87aabd/packages/react/src/ReactCreateRef.js#L12"
+      >
+        React - Github
+      </a>
+    </span>
+  }
+/>
+
+---
+
+<CodeSurfer>
+
+```js
+function CustomTextInput(props) {
+  // create a ref to store the textInput DOM element
+  const textInput = useRef(null);
+
+  function focusTextInput() {
+    textInput.current.focus();
+  }
+  return (
+    <div>
+      <input type="text" ref={textInput} />
+      <input
+        type="button"
+        value="Focus the text input"
+        onClick={focusTextInput}
+      />
+    </div>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+### Forwarding refs ⏩
+
+Pass refs through a component -> Children
+
+---
+
+### Consider a component having a native DOM element
+
+---
+
+<CodeSurfer>
+
+```js
+function FancyButton(props) {
+  return (
+    <button className="FancyButton">
+      {props.children}
+    </button>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+const FancyButton = React.forwardRef((props, ref) => (
+  <button ref={ref}>{props.children}</button>
+));
+
+const ref = useRef(null);
+<FancyButton ref={ref}>Click me!</FancyButton>;
+```
+
+</CodeSurfer>
+
+---
+
+### Now, ref.current will point to the `button` DOM node.
+
+---
+
+## Forwarding refs in HOCs
+
+ref is not a prop and hence will not get passed through
+
+---
+
+<CodeSurfer>
+
+```js
+function logProps(Component) {
+  function LogProps(props) {
+    const mounted = useRef();
+    useEffect(() => {
+      if (!mounted.current) {
+        console.log("Component has been mounted");
+        mounted.current = true;
+      } else {
+        console.log("Component has been updated");
+      }
+    });
+
+    return React.forwardRef((props, ref) => (
+      <Component ref={ref} {...rest} />
+    ));
+  }
+
+  return React.forwardRef((props, ref) => {
+    return <LogProps {...props} ref={ref} />;
+  });
+}
+```
+
+</CodeSurfer>
+
+---
+
+### When to use refs
+
+<OrderedList>
+  <ListItem content="Managing focus, text selection, or media playback" />
+  <ListItem content="Triggering animations" />
+  <ListItem content="Integrating with third-party DOM libraries." />
+</OrderedList>
+
+---
+
+### Finally...
+
+---
+
+### When to use
+
+<Container>
+  <ListItem content="HOC" />
+  <ListItem content="Render Props" />
+  <ListItem content="Hooks??" />
+</Container>
+
+---
+
+## That's it for today, thanks! 🙏🏽
+
+##### Let us try to persist these learnings to a permanent 'state' 😄
