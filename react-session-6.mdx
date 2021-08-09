@@ -1,0 +1,767 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import {
+  github,
+  vsDark,
+  vsLight,
+} from "@code-surfer/themes";
+import libraryImage from "./images/session-4/library.jpg";
+import frameImage from "./images/session-4/frame.jpg";
+import controlFlowImage from "./images/session-4/framework-library-controlflow.jpg";
+
+export const theme = vsLight;
+
+export const Container = ({ children }) => (
+  <div>{children}</div>
+);
+
+export const FixedContainer = ({ children }) => (
+  <div style={{ width: "1300px" }}>{children}</div>
+);
+
+export const OrderedList = ({ children }) => (
+  <ol>{children}</ol>
+);
+
+export const UnOrderedList = ({ children }) => (
+  <ul style={{ listStyleType: "square" }}>{children}</ul>
+);
+
+export const Heading = ({
+  styleProps = { color: "#454545", size: "68px" },
+  content,
+}) => (
+  <h1
+    style={{
+      color: styleProps.color,
+      fontSize: styleProps.size,
+      marginTop: "rem",
+      marginBottom: "4rem",
+      fontWeight: "500",
+      borderLeft: "16px solid #61dafb",
+      paddingLeft: "22px",
+      paddingTop: "16px",
+      paddingBottom: "16px",
+    }}
+  >
+    {content}
+  </h1>
+);
+
+export const CustomHeading = ({ children, ...rest }) => (
+  <Heading {...rest} content={children} />
+);
+
+export const ListItem = ({
+  styleProps = { color: "#4f4e4e", size: "2.5rem" },
+  content,
+}) => (
+  <li
+    style={{
+      color: styleProps.color,
+      fontSize: styleProps.size,
+      marginTop: "1rem",
+      fontWeight: "300",
+    }}
+  >
+    {content}
+  </li>
+);
+
+export const CustomListItem = ({ children, ...props }) => (
+  <ListItem {...props} content={children} />
+);
+
+export const Footer = ({ component }) => (
+  <div
+    style={{
+      background: "#61dafb",
+      position: "absolute",
+      bottom: "0",
+      left: "0",
+      right: "0",
+      padding: "12px",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {component}
+    </div>
+  </div>
+);
+
+# Namaskaram 🙏
+
+## _Getting the Foundation right for React_ ⚛️
+
+### _Session 6_ on _React Hooks and Chakra UI basics_
+
+##### 9th August , 2021
+
+---
+
+# Let's Begin 🥥
+
+---
+
+<Container>
+  <Heading content="Table Of Contents" />
+  <OrderedList>
+    <ListItem content="What are React Hooks? 🎣" />
+    <ListItem content="State Hook" />
+    <ListItem content="Effect Hook" />
+    <ListItem content="Building your own hooks" />
+    <ListItem content="Other React Hook" />
+    <ListItem content="React Library - Chakra" />
+  </OrderedList>
+</Container>
+
+---
+
+<Container>
+  <Heading content="Hooks? 🎣" />
+  <ListItem content="Noun: For catching hold of" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="What are React Hooks? 🎣" />
+  <ListItem content="New addition in React 16.8 ✅" />
+  <CustomListItem>
+    Hooks let you use state and other React features{" "}
+    <strong>without</strong> writing a class ✅
+  </CustomListItem>
+</Container>
+
+---
+
+<Container>
+  <ListItem content="Hooks are functions" />
+  <CustomListItem>
+    Hooks don’t work inside classes
+  </CustomListItem>
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+function Example() {
+  // Declare a new state variable, which we'll call "count"
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="If not for Hooks," />
+  <ListItem content="It’s hard to reuse stateful logic between components" />
+  <ListItem content="Mutually related code that changes together gets split apart" />
+  <ListItem content="Completely unrelated code ends up combined in a single method" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="React Hooks" />
+  <ListItem content="Are called inside a function component to add local state" />
+  <CustomListItem>
+    React will preserve state <em>between re-renders</em>
+  </CustomListItem>
+  <ListItem content="The initial state argument is only used during the first render" />
+</Container>
+
+---
+
+<Container>
+  <ListItem content="React provides a few built-in hooks" />
+  <CustomListItem>
+    Can create your own Hooks to reuse stateful behavior
+    between different components.
+  </CustomListItem>
+</Container>
+
+---
+
+<Container>
+  <Heading content="State Hook 📌" />
+  <ListItem content="Gives a function component the ability to have state" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+function notAReactComponent() {
+  let age = 22;
+  age = age + 1;
+  console.log("Age is", age);
+}
+
+notAReactComponent();
+notAReactComponent();
+notAReactComponent();
+
+//the value of age will not be preserved
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+function AReactComponent() {
+  // Declare multiple state variables!
+  const [age, setAge] = useState(42);
+  const [fruit, setFruit] = useState("banana");
+  const [todos, setTodos] = useState([
+    { text: "Learn Hooks" },
+  ]);
+}
+
+AReactComponent(); // can you do this? 😮 We will come back to this!
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="useState" />
+  <ListItem content="A way to preserve some values between the function calls" />
+  <ListItem content="Normally, variables disappear when the function exits but state variables are preserved by React" />
+  <ListItem content="The only argument to the useState() Hook is the initial state" />
+  <ListItem content="It returns a pair of values: the current state and a function that updates it" />
+  <ListItem content="It not called createState because..." />
+</Container>
+
+---
+
+#### The state is created only once, and then used subsequently
+
+---
+
+#### Also, if not for array destructuring
+
+---
+
+<CodeSurfer>
+
+```js
+let fruitStateVariable = useState("banana"); // Returns a pair
+let fruit = fruitStateVariable[0]; // First item in a pair
+let setFruit = fruitStateVariable[1]; // Second item in a pair
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Effect Hook ⚡️" />
+  <ListItem content="Effects: Data fetching, subscriptions, or manually changing the DOM " />
+  <ListItem content="They can affect other components and can’t be done during rendering" />
+</Container>
+
+---
+
+### Let's look at an example 💡
+
+---
+
+<CodeSurfer>
+
+```js
+function Example() {
+  const [count, setCount] = useState(0);
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // Update the document title using the browser API
+    document.title = `You clicked ${count} times`;
+  });
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="useEffect()" />
+  <ListItem content="Are run after flusing changes to the DOM" />
+  <CustomListItem>
+    React runs the effects after <strong>every</strong>{" "}
+    render — including the first render
+  </CustomListItem>
+    <ListItem content=" Effects may also optionally specify how to “clean up”" />
+
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+useEffect(() => {
+  ChatAPI.subscribe(props.friend.id, handleStatusChange);
+  return () => {
+    ChatAPI.unsubscribe(
+      props.friend.id,
+      handleStatusChange
+    );
+  };
+});
+```
+
+</CodeSurfer>
+
+---
+
+#### Would unsubscribe
+
+<Container>
+  <ListItem content="When the component unmounts" />
+  <ListItem content="Before re-running the effect due to a subsequent render" />
+</Container>
+
+---
+
+#### Why is useEffect hook called inside a component?
+
+<Container>
+  <ListItem content="Placing useEffect inside the component lets us access: " />
+  <ListItem content="the state variable (or any props) right from the effect" />
+</Container>
+
+---
+
+### More to know about effects
+
+<Container>
+  <ListItem content="The function passed to useEffect => different on every render" />
+  <ListItem content="This is what gets us rid of the possiblity of reading stale state value." />
+  <ListItem content="Each effect belongs to a particular render." />
+  <ListItem content="React will apply every effect used by the component, in the order they were specified" />
+</Container>
+
+---
+
+<Container>
+  <Heading content="Rules of Hooks" />
+  <UnOrderedList>
+    <ListItem content="Only Call Hooks at the Top Level" />
+    <ListItem content="Only call Hooks from React function components" />
+  </UnOrderedList>
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+useState("Mary"); // 1. Initialize the name state variable with 'Mary'
+useEffect(persistForm); // 2. Add an effect for persisting the form
+useState("Poppins"); // 3. Initialize the surname state variable with 'Poppins'
+useEffect(updateTitle); // 4. Add an effect for updating the title
+
+// -------------
+// Second render
+// -------------
+useState("Mary"); // 1. Read the name state variable (argument is ignored)
+useEffect(persistForm); // 2. Replace the effect for persisting the form
+useState("Poppins"); // 3. Read the surname state variable (argument is ignored)
+useEffect(updateTitle); // 4. Replace the effect for updating the title
+
+// ...
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+// 🔴 We're breaking the first rule by using a Hook in a condition
+if (name !== "") {
+  useEffect(function persistForm() {
+    localStorage.setItem("formData", name);
+  });
+}
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+useState("Mary"); // 1. Read the name state variable (argument is ignored)
+// useEffect(persistForm)  // 🔴 This Hook was skipped!
+useState("Poppins"); // 🔴 2 (but was 3). Fail to read the surname state variable
+useEffect(updateTitle); // 🔴 3 (but was 4). Fail to replace the effect
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="How to implement shouldComponentUpdate?" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+const Button = React.memo(
+  (props) => {
+    // component definition
+  },
+  (prev, next) => true // skip update on true
+);
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Other commonly used hoooks " />
+  <ListItem content="useReducer()" />
+  <ListItem content="useCallback()" />
+  <ListItem content="useMemo()" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+function ProductPage({ productId }) {
+  // ✅ Wrap with useCallback to avoid change on every render
+  const fetchProduct = useCallback(() => {}, [productId]); // ✅ All useCallback dependencies are specified
+
+  return <ProductDetails fetchProduct={fetchProduct} />;
+}
+
+function ProductDetails({ fetchProduct }) {
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]); // ✅ All useEffect dependencies are specified
+  // ...
+}
+```
+
+</CodeSurfer>
+
+---
+
+###### Note that `useCallback(fn, deps)` is equivalent to `useMemo(() => fn, deps)`.
+
+---
+
+<Container>
+  <Heading content="How to get the previous props? ⏮️" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  const prevCountRef = useRef();
+  useEffect(() => {
+    prevCountRef.current = count;
+  });
+  const prevCount = prevCountRef.current;
+
+  return (
+    <h1>
+      Now: {count}, before: {prevCount}
+    </h1>
+  );
+}
+```
+
+</CodeSurfer>
+
+---
+
+### That's about it for React Hooks! 🤷‍♂️
+
+---
+
+### Chakra UI ⚡️ - React Component Library
+
+---
+
+<FixedContainer>
+  Gives you all the building blocks 🧱 required to build a
+  React app.
+</FixedContainer>
+
+---
+
+### with speed 🏎️
+
+---
+
+<Container>
+  <Heading content="Chakra internally uses" />
+  <ListItem content="styled system - a collection of utility functions that add style props to your React components " />
+  <ListItem content="emotion -  CSS in JS library" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+import { Box } from "@chakra-ui/react"
+
+<Box m={2}>Tomato</Box>
+
+<Box maxW="960px" mx="auto" />
+
+<Box m={[2, 3]} />
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <Heading content="Responsiveness in Chakra" />
+</Container>
+
+---
+
+<FixedContainer>
+  Chakra UI uses the <strong>min-width</strong> media query
+  for responsive design. The breakpoints are: sm = 30em, md
+  = 48em, lg = 62em, xl = 80em
+</FixedContainer>
+
+---
+
+<CodeSurfer>
+
+```js
+<>
+  <Box
+    height={{
+      base: "100%", // 0-48em
+      md: "50%", // 48em-80em,
+      xl: "25%", // 80em+
+    }}
+    bg="teal.400"
+    width={[
+      "100%", // 0-30em
+      "50%", // 30em-48em
+      "25%", // 48em-62em
+      "15%", // 62em+
+    ]}
+  />
+  {/* responsive font size */}
+  <Box fontSize={["sm", "md", "lg", "xl"]}>Font Size</Box>
+  {/* responsive margin */}
+  <Box
+    mt={[2, 4, 6, 8]}
+    width="full"
+    height="24px"
+    bg="tomato"
+  />
+  {/* responsive padding */}
+  <Box bg="papayawhip" p={[2, 4, 6, 8]}>
+    Padding
+  </Box>
+</>
+```
+
+</CodeSurfer>
+
+---
+
+### Styling single part components
+
+---
+
+<CodeSurfer>
+
+```js
+export default {
+  baseStyle: {},
+
+  sizes: {},
+
+  variants: {},
+
+  defaultProps: {},
+};
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+const Button = {
+  baseStyle: {
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    borderRadius: "base",
+  },
+
+  sizes: {
+    sm: {
+      fontSize: "sm",
+      px: 4,
+      py: 3,
+    },
+    md: {
+      fontSize: "md",
+      px: 6,
+      py: 4,
+    },
+  },
+
+  variants: {
+    outline: {
+      border: "2px solid",
+      borderColor: "purple.500",
+      color: "purple.500",
+    },
+    solid: {
+      bg: "purple.500",
+      color: "white",
+    },
+  },
+  defaultProps: {
+    size: "md",
+    variant: "outline",
+  },
+};
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <CustomHeading>
+    The <strong>as</strong> prop
+  </CustomHeading>
+  <ListItem content="Feature in all chakra components that allows you to pass an HTML tag" />
+  <ListItem content="For example: " />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+<Button
+  as="a"
+  target="_blank"
+  variant="outline"
+  href="https://chakra-ui.com"
+>
+  Hello
+</Button>
+```
+
+</CodeSurfer>
+
+---
+
+<Container>
+  <CustomHeading>
+    The <strong>sx</strong> prop
+  </CustomHeading>
+  <ListItem content="Cnsidered an escape hatch" />
+  <ListItem content="Allows one to definte any standard CSS property" />
+</Container>
+
+---
+
+<CodeSurfer>
+
+```js
+<Image
+  src="http://placekitten.com/200/300"
+  alt="a kitten"
+  sx={{ filter: "blur(8px)" }}
+/>
+```
+
+</CodeSurfer>
+
+---
+
+### Folder structure:
+
+---
+
+<Container>
+  <CustomHeading>
+    The components folder can have 3 sub-directories:
+  </CustomHeading>
+  <ListItem content="sections folder (eg: Hero, Header, Footer )" />
+  <ListItem content="layouts folder (eg: Landing, Auth)" />
+  <ListItem content="ui folder with all the smaller components (eg. Logo, Button)" />
+</Container>
+
+---
+
+<Container>
+  <ListItem content="config folder" />
+  <ListItem content="pages folder (next)" />
+  <ListItem content="utils folder" />
+</Container>
+
+---
+
+## That mostly concludes our sessions! 🙏🏽
